@@ -3,6 +3,7 @@ from django.views import View
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Profile
 from .forms import UserCreateForm
 
@@ -15,7 +16,12 @@ class LoginView(View):
     def get(self, req):
         if req.user.is_authenticated:
             return redirect('users:all')
-        return render(req, self.template_name)
+
+        ctx = {}
+        if req.GET:
+            next = req.GET['next']
+            ctx = {'next': next}
+        return render(req, self.template_name, ctx)
 
     def post(self, req):
         username = req.POST['username'].lower()
@@ -89,4 +95,16 @@ class UserProfile(View):
         ctx = {'profile': profile, 'top_skills': top_skills,
                'other_skills': other_skills}
 
+        return render(req, self.template_name, ctx)
+
+
+class UserAccount(LoginRequiredMixin, View):
+    template_name = 'users/account.html'
+    login_url = '/login/'
+
+    def get(self, req):
+        profile = req.user.profile
+        skills = profile.skill_set.all()
+        projects = profile.project_set.all()
+        ctx = {'profile': profile, 'skills': skills, 'projects': projects}
         return render(req, self.template_name, ctx)
