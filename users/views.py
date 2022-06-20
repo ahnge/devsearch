@@ -5,7 +5,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Profile
-from .forms import UserCreateForm
+from .forms import UserCreateForm, ProfileForm
 
 # Create your views here.
 
@@ -68,7 +68,7 @@ class RegisterUserView(View):
             messages.success(req, 'User account was created!')
             if user is not None:
                 login(req, user)
-            return redirect('users:all')
+            return redirect('users:edit_account')
         else:
             messages.error(req, 'An error has occurred during registration.')
             ctx = {'form': form, 'page': 'register'}
@@ -108,3 +108,23 @@ class UserAccount(LoginRequiredMixin, View):
         projects = profile.project_set.all()
         ctx = {'profile': profile, 'skills': skills, 'projects': projects}
         return render(req, self.template_name, ctx)
+
+
+class EditAccount(LoginRequiredMixin, View):
+    template_name = 'users/profile_form.html'
+    login_url = '/login/'
+
+    def get(self, req):
+        f = ProfileForm(instance=req.user.profile)
+        ctx = {'form': f}
+        return render(req, self.template_name, ctx)
+
+    def post(self, req):
+        profile = req.user.profile
+        f = ProfileForm(req.POST, req.FILES, instance=profile)
+        if not f.is_valid:
+            ctx = {'form': f}
+            return render(req, self.template_name, ctx)
+
+        f.save()
+        return redirect('users:user_account')
