@@ -11,4 +11,6 @@ urlpatterns = [
     path('', views.Profiles.as_view(), name="all"),
     path('profile/<str:pk>/', views.UserProfile.as_view(), name="user_profile"),
     path('account/', views.UserAccount.as_view(), name="user_account"),
+
+    path('edit-account', views.EditAccount.as_view(), name='edit_account'),
 ]
