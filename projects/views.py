@@ -3,6 +3,7 @@ from .models import Project
 from .forms import ProjectForm
 from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib import messages
 
 
 def projects(req):
@@ -34,6 +35,7 @@ class CreateProject(LoginRequiredMixin, View):
             pj = form.save(commit=False)
             pj.owner = profile
             pj.save()
+            messages.success(req, "Project created successfully")
         return redirect('users:user_account')
 
 
@@ -53,6 +55,7 @@ class UpdateProject(LoginRequiredMixin, View):
         form = ProjectForm(req.POST, req.FILES, instance=pj)
         if form.is_valid():
             form.save()
+            messages.success(req, "Project updated successfully")
         return redirect('users:user_account')
 
 
@@ -62,11 +65,12 @@ class DeleteProject(LoginRequiredMixin, View):
     def get(self, req, pk):
         profile = req.user.profile
         pj = profile.project_set.get(pk=pk)
-        ctx = {'project': pj}
-        return render(req, 'projects/delete_form.html', ctx)
+        ctx = {'object': pj}
+        return render(req, 'delete_form.html', ctx)
 
     def post(self, req, pk):
         profile = req.user.profile
         pj = profile.project_set.get(pk=pk)
         pj.delete()
+        messages.success(req, "Project deleted successfully")
         return redirect('users:user_account')
