@@ -34,7 +34,7 @@ class CreateProject(LoginRequiredMixin, View):
             pj = form.save(commit=False)
             pj.owner = profile
             pj.save()
-        return redirect('projects:all_pjs')
+        return redirect('users:user_account')
 
 
 class UpdateProject(LoginRequiredMixin, View):
@@ -52,7 +52,7 @@ class UpdateProject(LoginRequiredMixin, View):
         form = ProjectForm(req.POST, req.FILES, instance=pj)
         if form.is_valid():
             form.save()
-        return redirect('projects:all_pjs')
+        return redirect('users:user_account')
 
 
 class DeleteProject(LoginRequiredMixin, View):
@@ -67,4 +67,4 @@ class DeleteProject(LoginRequiredMixin, View):
     def post(self, req, pk):
         pj = Project.objects.get(pk=pk)
         pj.delete()
-        return redirect('projects:all_pjs')
+        return redirect('users:user_account')

@@ -5,7 +5,7 @@
 <form action="" method="post">
     {% csrf_token %}
     <input class="btn btn--sub btn--lg  my-md" type="submit" value="Confirm">
-    <button class="btn btn--sub btn--lg  my-md"><a href="{% url 'projects:all_pjs' %}"
+    <button class="btn btn--sub btn--lg  my-md"><a href="{% url 'users:user_account' %}"
             style="text-decoration: none;">Cancle</a></button>
 </form>
 {% endblock content %}
