@@ -4,8 +4,8 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
-from .models import Profile
-from .forms import UserCreateForm, ProfileForm
+from .models import Profile, Skill
+from .forms import UserCreateForm, ProfileForm, SkillForm
 
 # Create your views here.
 
@@ -127,4 +127,60 @@ class EditAccount(LoginRequiredMixin, View):
             return render(req, self.template_name, ctx)
 
         f.save()
+        return redirect('users:user_account')
+
+
+class CreateSkill(LoginRequiredMixin, View):
+    template_name = 'users/skill_form.html'
+    login_url = '/login/'
+
+    def get(self, req):
+        f = SkillForm()
+        ctx = {'form': f}
+        return render(req, self.template_name, ctx)
+
+    def post(self, req):
+        profile = req.user.profile
+        f = SkillForm(req.POST)
+        if f.is_valid():
+            skill = f.save(commit=False)
+            skill.owner = profile
+            skill.save()
+        return redirect('users:user_account')
+
+
+class UpdateSkill(LoginRequiredMixin, View):
+    template_name = 'users/skill_form.html'
+    login_url = '/login/'
+
+    def get(self, req, pk):
+        profile = req.user.profile
+        skill = profile.skill_set.get(pk=pk)
+        form = SkillForm(instance=skill)
+        ctx = {'form': form}
+        return render(req, self.template_name, ctx)
+
+    def post(self, req, pk):
+        profile = req.user.profile
+        skill = profile.skill_set.get(pk=pk)
+        form = SkillForm(req.POST, instance=skill)
+        if form.is_valid():
+            form.save()
+        return redirect('users:user_account')
+
+
+class DeleteSkill(LoginRequiredMixin, View):
+    template_name = 'users/skill_delete_form.html'
+    login_url = '/login/'
+
+    def get(self, req, pk):
+        profile = req.user.profile
+        skill = profile.skill_set.get(pk=pk)
+        ctx = {'skill': skill}
+        return render(req, self.template_name, ctx)
+
+    def post(self, req, pk):
+        profile = req.user.profile
+        skill = profile.skill_set.get(pk=pk)
+        skill.delete()
         return redirect('users:user_account')

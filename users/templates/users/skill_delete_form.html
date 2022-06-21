@@ -1,0 +1,11 @@
+{% extends 'main.html' %}
+
+{% block content %}
+<h1>Are you sure you want to delete skill "{{skill.name}}"?</h1>
+<form action="" method="post">
+    {% csrf_token %}
+    <input class="btn btn--sub btn--lg  my-md" type="submit" value="Confirm">
+    <button class="btn btn--sub btn--lg  my-md"><a href="{% url 'users:user_account' %}"
+            style="text-decoration: none;">Cancle</a></button>
+</form>
+{% endblock content %}
