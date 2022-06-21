@@ -1,19 +1,19 @@
 {% extends 'main.html' %}
 
 {% block content %}
-<!-- Main Section -->
+<h1>Create skill</h1>
+
 <main class="formPage my-xl">
     <div class="content-box">
         <div class="formWrapper">
             <a class="backButton" href="{% url 'users:user_account' %}"><i class="im im-angle-left"></i></a>
             <br>
 
-            <form class="form" method="POST" enctype="multipart/form-data">
+            <form class="form" method="POST">
                 {% csrf_token %}
-                <!-- Input:Text -->
-                {% for field in form %}
+                {% for field in form%}
                 <div class="form__field">
-                    <label for="formInput#text">{{field.lable}}</label>
+                    <label for="formInput#text">{{field.label}}</label>
                     {{field}}
                 </div>
                 {% endfor %}
@@ -22,4 +22,5 @@
         </div>
     </div>
 </main>
+
 {% endblock content %}

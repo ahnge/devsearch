@@ -52,7 +52,8 @@
         </div>
         <div class="settings">
           <h3 class="settings__title">Skills</h3>
-          <a class="tag tag--pill tag--sub settings__btn tag--lg" href="#"><i class="im im-plus"></i> Add Skill</a>
+          <a class="tag tag--pill tag--sub settings__btn tag--lg" href="{% url 'users:create_skill' %}"><i
+              class="im im-plus"></i> Add Skill</a>
         </div>
 
         <table class="settings__table">
@@ -65,8 +66,10 @@
               </p>
             </td>
             <td class="settings__tableActions">
-              <a class="tag tag--pill tag--main settings__btn" href="#"><i class="im im-edit"></i> Edit</a>
-              <a class="tag tag--pill tag--main settings__btn" href="#"><i class="im im-x-mark-circle-o"></i>
+              <a class="tag tag--pill tag--main settings__btn" href="{% url 'users:update_skill' skill.id %}"><i
+                  class="im im-edit"></i> Edit</a>
+              <a class="tag tag--pill tag--main settings__btn"
+                href="{% url 'users:delete_skill' skill.id %}?next=/account"><i class="im im-x-mark-circle-o"></i>
                 Delete</a>
             </td>
           </tr>
@@ -75,7 +78,9 @@
 
         <div class="settings">
           <h3 class="settings__title">Projects</h3>
-          <a class="tag tag--pill tag--sub settings__btn tag--lg" href="#"><i class="im im-plus"></i> Add Project</a>
+          <a class="tag tag--pill tag--sub settings__btn tag--lg" href="{% url 'projects:create_project' %}"><i
+              class="im im-plus"></i> Add
+            Project</a>
         </div>
 
         <table class="settings__table">
@@ -92,8 +97,10 @@
               </p>
             </td>
             <td class="settings__tableActions">
-              <a class="tag tag--pill tag--main settings__btn" href="#"><i class="im im-edit"></i> Edit</a>
-              <a class="tag tag--pill tag--main settings__btn" href="#"><i class="im im-x-mark-circle-o"></i>
+              <a class="tag tag--pill tag--main settings__btn" href="{% url 'projects:update_project' pj.id %}"><i
+                  class="im im-edit"></i> Edit</a>
+              <a class="tag tag--pill tag--main settings__btn"
+                href="{% url 'projects:delete_project' pj.id %}?next=/account"><i class="im im-x-mark-circle-o"></i>
                 Delete</a>
             </td>
           </tr>

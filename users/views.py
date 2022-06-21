@@ -5,7 +5,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Profile
-from .forms import UserCreateForm, ProfileForm
+from .forms import UserCreateForm, ProfileForm, SkillForm
 
 # Create your views here.
 
@@ -127,4 +127,68 @@ class EditAccount(LoginRequiredMixin, View):
             return render(req, self.template_name, ctx)
 
         f.save()
+        messages.success(req, 'Account edited successfully')
+        return redirect('users:user_account')
+
+
+class CreateSkill(LoginRequiredMixin, View):
+    template_name = 'users/skill_form.html'
+    login_url = '/login/'
+
+    def get(self, req):
+        f = SkillForm()
+        ctx = {'form': f}
+        return render(req, self.template_name, ctx)
+
+    def post(self, req):
+        profile = req.user.profile
+        f = SkillForm(req.POST)
+        if f.is_valid():
+            skill = f.save(commit=False)
+            skill.owner = profile
+            skill.save()
+            messages.success(req, "Skill was created successfully")
+        else:
+            ctx = {'form': f}
+            messages.error(req, "Something went wrong")
+            return render(req, self.template_name, ctx)
+        return redirect('users:user_account')
+
+
+class UpdateSkill(LoginRequiredMixin, View):
+    template_name = 'users/skill_form.html'
+    login_url = '/login/'
+
+    def get(self, req, pk):
+        profile = req.user.profile
+        skill = profile.skill_set.get(pk=pk)
+        form = SkillForm(instance=skill)
+        ctx = {'form': form}
+        return render(req, self.template_name, ctx)
+
+    def post(self, req, pk):
+        profile = req.user.profile
+        skill = profile.skill_set.get(pk=pk)
+        form = SkillForm(req.POST, instance=skill)
+        if form.is_valid():
+            form.save()
+            messages.success(req, "Skill was updated successfully")
+        return redirect('users:user_account')
+
+
+class DeleteSkill(LoginRequiredMixin, View):
+    template_name = 'delete_form.html'
+    login_url = '/login/'
+
+    def get(self, req, pk):
+        profile = req.user.profile
+        skill = profile.skill_set.get(pk=pk)
+        ctx = {'object': skill}
+        return render(req, self.template_name, ctx)
+
+    def post(self, req, pk):
+        profile = req.user.profile
+        skill = profile.skill_set.get(pk=pk)
+        skill.delete()
+        messages.success(req, "Skill was deleted successfully")
         return redirect('users:user_account')
