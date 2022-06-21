@@ -30,8 +30,7 @@ class UserCreateForm(UserCreationForm):
 class ProfileForm(ModelForm):
     class Meta:
         model = Profile
-        fields = ['name', 'email', 'username',
-                  'location', 'short_intro', 'bio', 'profile_image', 'social_github', 'social_facebook', 'social_linkedin', 'social_youtube', 'social_website']
+        exclude = ['user']
 
     def __init__(self,  *args, **kwargs):
         super(ProfileForm, self).__init__(*args, **kwargs)
