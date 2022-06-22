@@ -4,7 +4,8 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
-from .models import Profile
+from django.db.models import Q
+from .models import Profile, Skill
 from .forms import UserCreateForm, ProfileForm, SkillForm
 
 # Create your views here.
@@ -82,6 +83,16 @@ class Profiles(View):
     ctx = {'profiles': profiles}
 
     def get(self, req):
+        search_query = ''
+        if req.GET.get('search_query'):
+            search_query = req.GET.get('search_query')
+            skills = Skill.objects.filter(name__icontains=search_query)
+            profiles = Profile.objects.distinct().filter(
+                Q(name__icontains=search_query) |
+                Q(short_intro__icontains=search_query) |
+                Q(skill__in=skills)
+            )
+            self.ctx = {'profiles': profiles, 'search_query': search_query}
         return render(req, self.template_name, self.ctx)
 
 
