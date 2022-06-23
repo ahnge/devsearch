@@ -4,13 +4,15 @@ from .forms import ProjectForm
 from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
+from .utils import search_projects
 
 
-def projects(req):
-    msg = 'projects'
-    projects = Project.objects.all()
-    ctx = {'msg': msg, 'projects': projects}
-    return render(req, "projects/projects.html", ctx)
+class ProjectsView(View):
+    template_name = "projects/projects.html"
+
+    def get(self, req):
+        ctx = search_projects(req)
+        return render(req, self.template_name, ctx)
 
 
 def project(req, pk):
