@@ -6,6 +6,7 @@ from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Profile
 from .forms import UserCreateForm, ProfileForm, SkillForm
+from .utils import search_profiles
 
 # Create your views here.
 
@@ -78,11 +79,10 @@ class RegisterUserView(View):
 
 class Profiles(View):
     template_name = "users/profiles.html"
-    profiles = Profile.objects.all()
-    ctx = {'profiles': profiles}
 
     def get(self, req):
-        return render(req, self.template_name, self.ctx)
+        ctx = search_profiles(req)
+        return render(req, self.template_name, ctx)
 
 
 class UserProfile(View):
