@@ -1,17 +1,21 @@
 from django.shortcuts import render, redirect
-from .models import Project
-from .forms import ProjectForm
 from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
-from .utils import search_projects
+from .utils import search_projects, paginate_projects
+from .models import Project
+from .forms import ProjectForm
 
 
 class ProjectsView(View):
     template_name = "projects/projects.html"
 
     def get(self, req):
-        ctx = search_projects(req)
+        projects, search_query = search_projects(req)
+        custom_range, projects = paginate_projects(req, projects)
+
+        ctx = {'projects': projects, 'search_query': search_query,
+               'custom_range': custom_range}
         return render(req, self.template_name, ctx)
 
 

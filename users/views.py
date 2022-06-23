@@ -1,3 +1,4 @@
+import profile
 from django.shortcuts import render, redirect
 from django.views import View
 from django.contrib.auth.models import User
@@ -6,7 +7,7 @@ from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Profile
 from .forms import UserCreateForm, ProfileForm, SkillForm
-from .utils import search_profiles
+from .utils import search_profiles, paginate_profiles
 
 # Create your views here.
 
@@ -81,7 +82,11 @@ class Profiles(View):
     template_name = "users/profiles.html"
 
     def get(self, req):
-        ctx = search_profiles(req)
+        profiles, search_query = search_profiles(req)
+        custom_range, profiles = paginate_profiles(req, profiles)
+
+        ctx = {'profiles': profiles, 'search_query': search_query,
+               'custom_range': custom_range}
         return render(req, self.template_name, ctx)
 
 
