@@ -1,0 +1,35 @@
+{% if objects_page.has_other_pages %}
+<div class="pagination">
+    <ul class="container">
+        {% if objects_page.has_previous %}
+        <li>
+            <a class="btn page-link "
+                href="?page={{objects_page.previous_page_number}}{% if search_query %}&search_query={{search_query}}{% endif %}">&#10094;
+                Prev</a>
+        </li>
+        {% endif %}
+
+        {% for page in custom_range  %}
+        {% if page == objects_page.number %}
+        <li>
+            <a class="btn page-link btn--sub"
+                href="?page={{page}}{% if search_query %}&search_query={{search_query}}{% endif %}">{{page}}</a>
+        </li>
+        {% else %}
+        <li>
+            <a class="btn page-link"
+                href="?page={{page}}{% if search_query %}&search_query={{search_query}}{% endif %}">{{page}}</a>
+        </li>
+        {% endif %}
+        {% endfor %}
+
+        {% if objects_page.has_next %}
+        <li>
+            <a class="btn page-link "
+                href="?page={{objects_page.next_page_number}}{% if search_query %}&search_query={{search_query}}{% endif %}">Next
+                &#10095;</a>
+        </li>
+        {% endif %}
+    </ul>
+</div>
+{% endif %}
