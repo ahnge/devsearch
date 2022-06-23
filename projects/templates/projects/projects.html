@@ -56,7 +56,12 @@
         </div>
     </section>
 
-
+    <!--Paginator-->
+    {% if search_query %}
+    {% include 'pagination.html' with objects_page=projects search_query=search_query %}
+    {% else %}
+    {% include 'pagination.html' with objects_page=projects %}
+    {% endif %}
 </main>
 
 

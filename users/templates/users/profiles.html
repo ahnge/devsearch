@@ -1,6 +1,7 @@
 {% extends 'main.html' %}
 
 {% block content %}
+<!-- Profiles -->
 <main class="home">
     <section class="hero-section text-center">
         <div class="container container--narrow">
@@ -54,7 +55,11 @@
             </div>
         </div>
     </section>
-
-
+    <!--Paginator-->
+    {% if search_query %}
+    {% include 'pagination.html' with objects_page=profiles search_query=search_query %}
+    {% else %}
+    {% include 'pagination.html' with objects_page=profiles %}
+    {% endif %}
 </main>
 {% endblock content %}
