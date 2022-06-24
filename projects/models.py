@@ -27,7 +27,23 @@ class Project(models.Model):
         return self.title
 
     class Meta:
-        ordering = ['-created']
+        ordering = ['-vote_ration', '-vote_total', 'title']
+
+    @property
+    def reviewers(self):
+        queryset = self.review_set.all().values_list('owner__id', flat=True)
+        return queryset
+
+    @property
+    def getVoteCount(self):
+        reviews = self.review_set.all()
+        up_votes = reviews.filter(value='up').count()
+        total_votes = reviews.count()
+
+        ratio = (up_votes / total_votes) * 100
+        self.vote_total = total_votes
+        self.vote_ration = ratio
+        self.save()
 
 
 class Review(models.Model):
