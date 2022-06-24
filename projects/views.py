@@ -1,10 +1,11 @@
 from django.shortcuts import render, redirect
+from django.urls import reverse
 from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
 from .utils import search_projects, paginate_projects
 from .models import Project
-from .forms import ProjectForm
+from .forms import ProjectForm, ReviewForm
 
 
 class ProjectsView(View):
@@ -19,11 +20,28 @@ class ProjectsView(View):
         return render(req, self.template_name, ctx)
 
 
-def project(req, pk):
-    pj = Project.objects.get(pk=pk)
-    ctx = {'project': pj}
+class ProjectView(View):
+    def get(self, req, pk):
+        pj = Project.objects.get(pk=pk)
+        f = ReviewForm()
+        ctx = {'project': pj, 'form': f}
+        return render(req, "projects/single-project.html", ctx)
 
-    return render(req, "projects/single-project.html", ctx)
+    def post(self, req, pk):
+        pj = Project.objects.get(pk=pk)
+        f = ReviewForm(req.POST)
+        if f.is_valid():
+            review = f.save(commit=False)
+            review.project = pj
+            review.owner = req.user.profile
+            review.save()
+            pj.getVoteCount
+            messages.success(req, 'Your review was successfully submitted!')
+            return redirect('projects:sg_pj', pk=pk)
+        else:
+            print("form is not validated")
+            ctx = {'form': f, 'project': pj}
+            return render(req, "projects/single-project.html", ctx)
 
 
 class CreateProject(LoginRequiredMixin, View):
