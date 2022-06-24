@@ -13,7 +13,8 @@
             <p>Create a new developer account</p>
         </div>
 
-        <form action="{% url 'users:register' %}" class="form auth__form" method="post">
+        <form action="{% url 'users:register' %}{% if next %}?next={{next}}{% endif %}" class="form auth__form"
+            method="post">
             {% csrf_token %}
 
             {% for field in form %}

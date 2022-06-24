@@ -70,7 +70,7 @@ class RegisterUserView(View):
             messages.success(req, 'User account was created!')
             if user is not None:
                 login(req, user)
-            return redirect('users:edit_account')
+            return redirect(req.GET['next'] if 'next' in req.GET else 'users:edit_account')
         else:
             messages.error(req, 'An error has occurred during registration.')
             ctx = {'form': form, 'page': 'register'}
