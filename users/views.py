@@ -208,3 +208,17 @@ class InboxView(LoginRequiredMixin, View):
         umc = m.filter(is_read=False).count()
         ctx = {'ms': m, 'unread_msgs': umc}
         return render(req, self.template_name, ctx)
+
+
+class MsgDetailView(LoginRequiredMixin, View):
+    template_name = 'users/message.html'
+    login_url = '/login/'
+
+    def get(self, req, pk):
+        p = req.user.profile
+        m = p.messages.get(id=pk)
+        if not m.is_read:
+            m.is_read = True
+            m.save()
+        ctx = {'msg': m}
+        return render(req, self.template_name, ctx)

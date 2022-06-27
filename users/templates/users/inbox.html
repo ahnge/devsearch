@@ -7,7 +7,7 @@
         <ul class="messages">
             {% for m in ms  %}
             <li class="message {% if not m.is_read %}message--unread{% endif %}">
-                <a href="message.html">
+                <a href="{% url 'users:message' m.id %}">
                     <span class="message__author">{{m.name}}</span>
                     <span class="message__subject">{{m.subject}}</span>
                     <span class="message__date">{{m.created}}</span>
