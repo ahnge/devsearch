@@ -1,11 +1,10 @@
-import profile
 from django.shortcuts import render, redirect
 from django.views import View
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
-from .models import Profile
+from .models import Profile, Message
 from .forms import UserCreateForm, ProfileForm, SkillForm
 from .utils import search_profiles, paginate_profiles
 
@@ -204,4 +203,8 @@ class InboxView(LoginRequiredMixin, View):
     login_url = '/login/'
 
     def get(self, req):
-        return render(req, self.template_name)
+        profile = req.user.profile
+        m = profile.messages.all()
+        umc = m.filter(is_read=False).count()
+        ctx = {'ms': m, 'unread_msgs': umc}
+        return render(req, self.template_name, ctx)
