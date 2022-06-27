@@ -197,3 +197,11 @@ class DeleteSkill(LoginRequiredMixin, View):
         skill.delete()
         messages.success(req, "Skill was deleted successfully")
         return redirect('users:user_account')
+
+
+class InboxView(LoginRequiredMixin, View):
+    template_name = 'users/inbox.html'
+    login_url = '/login/'
+
+    def get(self, req):
+        return render(req, self.template_name)
