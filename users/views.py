@@ -222,3 +222,11 @@ class MsgDetailView(LoginRequiredMixin, View):
             m.save()
         ctx = {'msg': m}
         return render(req, self.template_name, ctx)
+
+
+class CreateMsg(View):
+    template_name = "users/message_form.html"
+
+    def get(self, req, pk):
+        ctx = {'profile_id': pk}
+        return render(req, self.template_name, ctx)
