@@ -1,12 +1,11 @@
-import profile
 from django.shortcuts import render, redirect
 from django.views import View
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
-from .models import Profile
-from .forms import UserCreateForm, ProfileForm, SkillForm
+from .models import Profile, Message
+from .forms import UserCreateForm, ProfileForm, SkillForm, MessageForm
 from .utils import search_profiles, paginate_profiles
 
 # Create your views here.
@@ -197,3 +196,64 @@ class DeleteSkill(LoginRequiredMixin, View):
         skill.delete()
         messages.success(req, "Skill was deleted successfully")
         return redirect('users:user_account')
+
+
+class InboxView(LoginRequiredMixin, View):
+    template_name = 'users/inbox.html'
+    login_url = '/login/'
+
+    def get(self, req):
+        profile = req.user.profile
+        m = profile.messages.all()
+        umc = m.filter(is_read=False).count()
+        ctx = {'ms': m, 'unread_msgs': umc}
+        return render(req, self.template_name, ctx)
+
+
+class MsgDetailView(LoginRequiredMixin, View):
+    template_name = 'users/message.html'
+    login_url = '/login/'
+
+    def get(self, req, pk):
+        p = req.user.profile
+        m = p.messages.get(id=pk)
+        if not m.is_read:
+            m.is_read = True
+            m.save()
+        ctx = {'msg': m}
+        return render(req, self.template_name, ctx)
+
+
+class CreateMsg(View):
+    template_name = "users/message_form.html"
+
+    def get(self, req, pk):
+        p = Profile.objects.get(pk=pk)
+        if req.user.is_authenticated and req.user.profile == p:
+            messages.warning(req, "Wow Wow, just wow!")
+            return redirect('users:user_profile', pk=pk)
+        f = MessageForm()
+        ctx = {'profile_id': pk, 'form': f}
+        return render(req, self.template_name, ctx)
+
+    def post(self, req, pk):
+        recipient_p = Profile.objects.get(pk=pk)
+        f = MessageForm(req.POST)
+        if f.is_valid():
+            if req.user.is_authenticated:
+                m = f.save(commit=False)
+                m.sender = req.user.profile
+                m.recipient = recipient_p
+                m.name = req.user.profile.name
+                m.email = req.user.profile.email
+                m.save()
+            else:
+                m = f.save(commit=False)
+                m.recipient = recipient_p
+                m.save()
+            messages.success(req, "Message sent successfully")
+            return redirect('users:user_profile', pk=pk)
+
+        ctx = {'profile_id': pk, 'form': f}
+        messages.error(req, "Message not sent")
+        return render(req, self.template_name, ctx)

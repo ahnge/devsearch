@@ -19,4 +19,8 @@ urlpatterns = [
          views.UpdateSkill.as_view(), name="update_skill"),
     path('delete-skiill/<str:pk>/',
          views.DeleteSkill.as_view(), name="delete_skill"),
+
+    path('inbox/', views.InboxView.as_view(), name="inbox"),
+    path('message/<str:pk>/', views.MsgDetailView.as_view(), name="message"),
+    path('send-message/<str:pk>/', views.CreateMsg.as_view(), name="create_msg")
 ]
