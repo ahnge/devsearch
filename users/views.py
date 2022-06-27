@@ -5,7 +5,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Profile, Message
-from .forms import UserCreateForm, ProfileForm, SkillForm
+from .forms import UserCreateForm, ProfileForm, SkillForm, MessageForm
 from .utils import search_profiles, paginate_profiles
 
 # Create your views here.
@@ -228,5 +228,32 @@ class CreateMsg(View):
     template_name = "users/message_form.html"
 
     def get(self, req, pk):
-        ctx = {'profile_id': pk}
+        p = Profile.objects.get(pk=pk)
+        if req.user.is_authenticated and req.user.profile == p:
+            messages.warning(req, "Wow Wow, just wow!")
+            return redirect('users:user_profile', pk=pk)
+        f = MessageForm()
+        ctx = {'profile_id': pk, 'form': f}
+        return render(req, self.template_name, ctx)
+
+    def post(self, req, pk):
+        recipient_p = Profile.objects.get(pk=pk)
+        f = MessageForm(req.POST)
+        if f.is_valid():
+            if req.user.is_authenticated:
+                m = f.save(commit=False)
+                m.sender = req.user.profile
+                m.recipient = recipient_p
+                m.name = req.user.profile.name
+                m.email = req.user.profile.email
+                m.save()
+            else:
+                m = f.save(commit=False)
+                m.recipient = recipient_p
+                m.save()
+            messages.success(req, "Message sent successfully")
+            return redirect('users:user_profile', pk=pk)
+
+        ctx = {'profile_id': pk, 'form': f}
+        messages.error(req, "Message not sent")
         return render(req, self.template_name, ctx)

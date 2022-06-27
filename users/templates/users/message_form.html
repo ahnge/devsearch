@@ -7,15 +7,26 @@
             <a class="backButton" href="{% url 'users:user_profile' profile_id %}"><i class="im im-angle-left"></i></a>
             <br>
 
-            <form class="form" method="POST">
+            <form method="post" class="form">
                 {% csrf_token %}
-                <!-- Input:Text -->
+                {% if request.user.is_authenticated == False %}
+                {% for field in form  %}
                 <div class="form__field">
-                    <label for="formInput#text">Text Field: </label>
-                    <input class="input input--text" id="formInput#text" type="text" name="text"
-                        placeholder="Enter text" />
+                    <label for="formInput#text">{{field.label}}</label>
+                    {{field}}
                 </div>
-                <input class="btn btn--sub btn--lg  my-md" type="submit" value="Submit" />
+                {% endfor %}
+                {% else %}
+                <div class="form__field">
+                    <label for="formInput#text">{{form.subject.label}}</label>
+                    {{form.subject}}
+                </div>
+                <div class="form__field">
+                    <label for="formInput#text">{{form.body.label}}</label>
+                    {{form.body}}
+                </div>
+                {% endif %}
+                <input class="btn btn--sub btn--lg my-md" type="submit" value="Submit" />
             </form>
         </div>
     </div>
