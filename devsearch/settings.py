@@ -121,7 +121,8 @@ USE_TZ = True
 
 EMAIL_HOST = 'smtp.zoho.com'
 EMAIL_HOST_USER = 'ahnge226@zohomail.com'
-EMAIL_HOST_PASSWORD = 'H4GAize20T2Q'
+DEFAULT_FROM_EMAIL = 'ahnge226@zohomail.com'
+EMAIL_HOST_PASSWORD = ''
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
