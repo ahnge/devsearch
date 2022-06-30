@@ -11,7 +11,7 @@
                 <div class="singleProject__toolStack">
                     {% for tag in project.tags.all  %}
                     <span class="tag tag--pill tag--sub tag--lg">
-                        <small>{{tag.name}}</small>
+                        <small>{{tag.name.capitalize}}</small>
                     </span>
                     {% endfor %}
                 </div>
