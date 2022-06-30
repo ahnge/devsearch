@@ -78,8 +78,7 @@
                         <div class="column">
                             <div class="card project">
                                 <a href="{% url 'projects:sg_pj' pj.id %}" class="project">
-                                    <img class="project__thumbnail" src="{{pj.featured_image.url}}"
-                                        alt="project thumbnail" />
+                                    <img class="project__thumbnail" src="{{pj.img_url}}" alt="project thumbnail" />
                                     <div class="card__body">
                                         <h3 class="project__title">{{pj.title}}</h3>
                                         <p><a class="project__author"

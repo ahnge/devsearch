@@ -4,7 +4,7 @@ from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
 from .utils import search_projects, paginate_projects
-from .models import Project
+from .models import Project, Tag
 from .forms import ProjectForm, ReviewForm
 
 
@@ -53,12 +53,16 @@ class CreateProject(LoginRequiredMixin, View):
         return render(req, 'projects/project_form.html', ctx)
 
     def post(self, req):
+        new_tags = req.POST.get("new_tags").replace(',', '').split()
         profile = req.user.profile
         form = ProjectForm(req.POST, req.FILES)
         if form.is_valid():
             pj = form.save(commit=False)
             pj.owner = profile
             pj.save()
+            for tag in new_tags:
+                tag, created = Tag.objects.get_or_create(name=tag)
+                pj.tags.add(tag)
             messages.success(req, "Project created successfully")
         return redirect('users:user_account')
 
@@ -74,11 +78,15 @@ class UpdateProject(LoginRequiredMixin, View):
         return render(req, 'projects/project_form.html', ctx)
 
     def post(self, req, pk):
+        new_tags = req.POST.get("new_tags").replace(',', '').split()
         profile = req.user.profile
         pj = profile.project_set.get(pk=pk)
         form = ProjectForm(req.POST, req.FILES, instance=pj)
         if form.is_valid():
-            form.save()
+            p = form.save()
+            for tag in new_tags:
+                tag, created = Tag.objects.get_or_create(name=tag)
+                p.tags.add(tag)
             messages.success(req, "Project updated successfully")
         return redirect('users:user_account')
 
