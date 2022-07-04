@@ -26,6 +26,8 @@ urlpatterns = [
     # my_apps
     path('', include('users.urls')),
     path('projects/', include('projects.urls')),
+    # api
+    path('api/', include('api.urls')),
     # auth_views
     path('reset_password/', auth_views.PasswordResetView.as_view(
         template_name='registration/reset_password.html'), name='reset_password'),
