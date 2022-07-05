@@ -151,7 +151,7 @@ USE_I18N = True
 
 USE_TZ = True
 
-CORS_ALLOW_ALL_ORIGINS = False
+CORS_ALLOW_ALL_ORIGINS = True
 
 # Email config
 EMAIL_HOST = 'smtp.zoho.com'

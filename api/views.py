@@ -1,7 +1,8 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
-from projects.models import Project, Review
+from projects.models import Project, Review, Tag
+from django.shortcuts import get_object_or_404, redirect
 from .serializers import ProjectSerializer
 
 
@@ -40,7 +41,6 @@ class VoteProjectView(APIView):
         user = req.user.profile
         pj = Project.objects.get(id=pk)
         data = req.data
-        print(data['value'])
 
         review, created = Review.objects.get_or_create(
             owner=user,
@@ -52,3 +52,12 @@ class VoteProjectView(APIView):
 
         s_pj = ProjectSerializer(pj, many=False)
         return Response(s_pj.data)
+
+
+class RemoveTagView(APIView):
+
+    def delete(self, req):
+        pk = req.data['id']
+        tag = get_object_or_404(Tag, id=pk)
+        tag.delete()
+        return Response("tag was deleted")
