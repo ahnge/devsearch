@@ -32,7 +32,8 @@ INSTALLED_APPS = [
     'projects.apps.ProjectsConfig',
     'users.apps.UsersConfig',
     # Installed_apps
-    'rest_framework'
+    'rest_framework',
+    'corsheaders'
 ]
 
 REST_FRAMEWORK = {
@@ -74,6 +75,9 @@ SIMPLE_JWT = {
 }
 
 MIDDLEWARE = [
+    # my third_party middleware
+    "corsheaders.middleware.CorsMiddleware",
+    # django middleware
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -147,7 +151,9 @@ USE_I18N = True
 
 USE_TZ = True
 
+CORS_ALLOW_ALL_ORIGINS = False
 
+# Email config
 EMAIL_HOST = 'smtp.zoho.com'
 EMAIL_HOST_USER = 'ahnge226@zohomail.com'
 DEFAULT_FROM_EMAIL = 'ahnge226@zohomail.com'
