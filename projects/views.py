@@ -74,7 +74,7 @@ class UpdateProject(LoginRequiredMixin, View):
         profile = req.user.profile
         pj = profile.project_set.get(pk=pk)
         form = ProjectForm(instance=pj)
-        ctx = {'form': form}
+        ctx = {'form': form, 'project': pj}
         return render(req, 'projects/project_form.html', ctx)
 
     def post(self, req, pk):

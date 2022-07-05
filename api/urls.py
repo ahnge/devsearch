@@ -13,4 +13,6 @@ urlpatterns = [
     path('projects/', views.ProjectsView.as_view()),
     path('projects/<str:pk>/', views.ProjectView.as_view()),
     path('projects/<str:pk>/vote/', views.VoteProjectView.as_view()),
+
+    path('remove-tag/', views.RemoveTagView.as_view())
 ]
