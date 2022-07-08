@@ -15,7 +15,7 @@ class Profile(models.Model):
     short_intro = models.CharField(max_length=200, blank=True, null=True)
     bio = models.TextField(blank=True, null=True)
     profile_image = models.ImageField(
-        blank=True, null=True, upload_to="profiles/", default="profiles/user-default.png")
+        blank=True, null=True, upload_to="profiles/", default="images/profiles/user-default.png")
     social_github = models.CharField(max_length=200, blank=True, null=True)
     social_facebook = models.CharField(max_length=200, blank=True, null=True)
     social_linkedin = models.CharField(max_length=200, blank=True, null=True)
@@ -34,7 +34,7 @@ class Profile(models.Model):
         try:
             url = self.profile_image.url
         except:
-            url = "/images/profiles/user-default.png"
+            url = "https://devsearch-dj.s3.ap-southeast-1.amazonaws.com/images/profiles/user-default.png"
         return url
 
     def __str__(self):

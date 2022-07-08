@@ -12,7 +12,7 @@ class Project(models.Model):
     title = models.CharField(max_length=200)
     description = models.TextField(null=True, blank=True)
     featured_image = models.ImageField(
-        null=True, blank=True, default='default.jpg')
+        null=True, blank=True, default='images/default.jpg')
     demo_link = models.CharField(max_length=2000, null=True, blank=True)
     source_link = models.CharField(max_length=2000, null=True, blank=True)
     tags = models.ManyToManyField('Tag', blank=True)
@@ -34,7 +34,7 @@ class Project(models.Model):
         try:
             url = self.featured_image.url
         except:
-            url = '/images/default.jpg'
+            url = 'https://devsearch-dj.s3.ap-southeast-1.amazonaws.com/images/default.jpg'
         return url
 
     @property
