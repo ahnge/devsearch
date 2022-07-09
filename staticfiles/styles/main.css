@@ -1,0 +1,8 @@
+.my-alert {
+    position: absolute;
+    z-index: 10;
+    top: 9rem;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+}
