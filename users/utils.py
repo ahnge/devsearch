@@ -5,7 +5,9 @@ from django.contrib.auth.tokens import PasswordResetTokenGenerator
 
 
 def search_profiles(req):
-    profiles = Profile.objects.all()
+    profiles = Profile.objects.exclude(
+        Q(short_intro=None)
+    )
     search_query = ''
 
     if req.GET.get('search_query'):
