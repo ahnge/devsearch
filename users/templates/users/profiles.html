@@ -28,6 +28,7 @@
         <div class="container">
             <div class="grid grid--three">
                 {% for profile in profiles  %}
+                {% if profile.skill_set.all %}
                 <div class="column card">
                     <div class="dev">
                         <a href="{% url 'users:user_profile' profile.id %}" class="card__body">
@@ -51,6 +52,7 @@
                         </a>
                     </div>
                 </div>
+                {% endif %}
                 {% endfor %}
             </div>
         </div>

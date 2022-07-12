@@ -1,9 +1,10 @@
 from django.forms import ModelForm
 from django import forms
 from .models import Project, Review
+from users.forms import BaseForm
 
 
-class ProjectForm(ModelForm):
+class ProjectForm(BaseForm):
     class Meta:
         model = Project
         fields = ['title', 'description', 'featured_image',
@@ -27,7 +28,7 @@ class ProjectForm(ModelForm):
         #     {'class': 'input'})
 
 
-class ReviewForm(ModelForm):
+class ReviewForm(BaseForm):
     class Meta:
         model = Review
         fields = ['value', 'body']
