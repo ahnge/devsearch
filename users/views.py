@@ -307,3 +307,19 @@ class CreateMsg(View):
         ctx = {'profile_id': pk, 'form': f}
         messages.error(req, "Message not sent")
         return render(req, self.template_name, ctx)
+
+
+class DeleteMsgView(LoginRequiredMixin, View):
+    template_name = 'delete_form.html'
+    login_url = '/login/'
+
+    def get(self, req, pk):
+        msg = Message.objects.get(pk=pk)
+        ctx = {'object': msg}
+        return render(req, self.template_name, ctx)
+
+    def post(self, req, pk):
+        msg = Message.objects.get(pk=pk)
+        msg.delete()
+        messages.success(req, "Message was deleted successfully")
+        return redirect('users:inbox')
