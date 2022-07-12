@@ -22,5 +22,10 @@ urlpatterns = [
 
     path('inbox/', views.InboxView.as_view(), name="inbox"),
     path('message/<str:pk>/', views.MsgDetailView.as_view(), name="message"),
-    path('send-message/<str:pk>/', views.CreateMsg.as_view(), name="create_msg")
+    path('send-message/<str:pk>/', views.CreateMsg.as_view(), name="create_msg"),
+    path('delete-message/<str:pk>/',
+         views.DeleteMsgView.as_view(), name="delete_msg"),
+
+    path('activate/<str:uidb64>/<str:token>/',
+         views.UserAccountActivateView.as_view(), name='activate')
 ]

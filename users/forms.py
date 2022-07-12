@@ -4,6 +4,14 @@ from django.forms.models import ModelForm
 from .models import Profile, Skill, Message
 
 
+class BaseForm(ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(BaseForm, self).__init__(*args, **kwargs)
+        for bound_field in self:
+            if hasattr(bound_field, "field") and bound_field.field.required:
+                bound_field.field.widget.attrs["required"] = "required"
+
+
 class UserCreateForm(UserCreationForm):
     class Meta:
         model = User
@@ -27,7 +35,7 @@ class UserCreateForm(UserCreationForm):
         )
 
 
-class ProfileForm(ModelForm):
+class ProfileForm(BaseForm):
     class Meta:
         model = Profile
         exclude = ['user']
@@ -40,7 +48,7 @@ class ProfileForm(ModelForm):
                 {'class': 'input', 'placeholder': f"{name.capitalize()}"})
 
 
-class SkillForm(ModelForm):
+class SkillForm(BaseForm):
     class Meta:
         model = Skill
         exclude = ['owner']
@@ -53,7 +61,7 @@ class SkillForm(ModelForm):
                 {'class': 'input', 'placeholder': f"{name.capitalize()}"})
 
 
-class MessageForm(ModelForm):
+class MessageForm(BaseForm):
     class Meta:
         model = Message
         fields = ['name', 'email', 'subject', 'body']

@@ -1,10 +1,33 @@
 {% extends 'main.html' %}
 
+{% block head %}
+<style>
+    .msg-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .trash-can {
+        padding-top: 7px;
+        cursor: pointer;
+    }
+
+    .im-trash-can:hover {
+        color: red;
+    }
+</style>
+{% endblock head %}
+
 {% block content %}
 <main class="messagePage my-xl">
     <div class="content-box">
         <div class="message">
-            <a class="backButton" href="{% url 'users:inbox' %}"><i class="im im-angle-left"></i></a>
+            <div class="msg-top">
+                <a class="backButton" href="{% url 'users:inbox' %}"><i class="im im-angle-left"></i></a>
+                <a class="trash-can" href="{% url 'users:delete_msg' msg.id %}?next=/inbox"><i
+                        class="im im-trash-can"></i></a>
+            </div>
             <h2 class="message__subject">{{msg.subject}}</h4>
                 {% if msg.sender %}
                 <a href="{% url 'users:user_profile' msg.sender.id %}" class="message__author">{{msg.name}}</a>

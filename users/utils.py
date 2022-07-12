@@ -1,10 +1,13 @@
 from .models import Skill, Profile
 from django.db.models import Q
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+from django.contrib.auth.tokens import PasswordResetTokenGenerator
 
 
 def search_profiles(req):
-    profiles = Profile.objects.all()
+    profiles = Profile.objects.exclude(
+        Q(short_intro=None)
+    )
     search_query = ''
 
     if req.GET.get('search_query'):
@@ -42,3 +45,6 @@ def paginate_profiles(req, profiles):
     custom_range = range(leftIndex, rightIndex)
 
     return custom_range, profiles
+
+
+account_activation_token = PasswordResetTokenGenerator()
